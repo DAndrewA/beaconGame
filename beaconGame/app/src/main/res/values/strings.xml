@@ -4,4 +4,14 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_game">Beacon Game</string>
+
+    <string-array name="coloursArray">
+        <item>white</item>>
+        <item>green</item>>
+        <item>blue</item>>
+        <item>red</item>>
+        <item>purple</item>>
+        <item>orange</item>>
+        <item>yellow</item>>
+    </string-array>
 </resources>
