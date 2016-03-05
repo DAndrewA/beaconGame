@@ -1,10 +1,12 @@
 package andrewmmattb.beacongame;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.JsonWriter;
 import android.util.Log;
 import android.view.Menu;
@@ -74,11 +76,39 @@ public class GameActivity extends Activity {
         String jsonString = new JSONObject(values).toString();
 
         try {
+            Request.sendPost(jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("problem",""+e.getMessage());
+        }
+
+        /* FIRST ATTEMPT - REQUEST CLASS DESTROYS THIS
+        try {
             URL url = new URL("http",serverPath,80,"points");
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
-            connection.setDoOutput(true);
+
+
+
+
+            String userCredentials = "username:password";
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(jsonString.getBytes().length));
+            connection.setRequestProperty("Content-Language", "en-UK");
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+
+
+            InputStream is = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            Log.e("After input stream", "Wooo");
+
+
+
+            connection.setDoOutput(true);
             connection.setChunkedStreamingMode(0);
 
             Log.e("Before postrequest", connection.toString());
@@ -92,6 +122,7 @@ public class GameActivity extends Activity {
 
             Log.e("After postRequest","Wooo");
 
+            /*
             InputStream is = connection.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
@@ -114,7 +145,9 @@ public class GameActivity extends Activity {
         }
         catch(Throwable t){
             t.printStackTrace();
+            Log.e("Throwable error", " " + t.getMessage());
             Toast.makeText(GameActivity.this,"We got an error, throwable",Toast.LENGTH_SHORT).show();
         }
+        */
     }
 }
