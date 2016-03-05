@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
 import android.util.JsonWriter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -14,7 +15,10 @@ import android.widget.Toast;
 import org.json.*;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -29,7 +33,7 @@ import java.util.Set;
 public class GameActivity extends Activity {
 
     String username;
-    String serverPath = "http://ec2-54-187-69-193.us-west-2.compute.amazonaws.com/";
+    String serverPath = "ec2-54-187-69-193.us-west-2.compute.amazonaws.com";
 
     int score = 0;
     int prevScore = 0;
@@ -53,6 +57,7 @@ public class GameActivity extends Activity {
             makeSeverPost();
         }
         catch (IOException e) {
+            Toast.makeText(GameActivity.this,"There was an IO error, called after function call (line 56)",Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -69,24 +74,47 @@ public class GameActivity extends Activity {
         String jsonString = new JSONObject(values).toString();
 
         try {
-            URL url = new URL(serverPath);
+            URL url = new URL("http",serverPath,80,"points");
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setChunkedStreamingMode(0);
 
-            OutputStreamWriter postRequest = new OutputStreamWriter(connection.getOutputStream());
+            Log.e("Before postrequest", connection.toString());
+            Log.e("Before again...",connection.getURL().toString());
+
+            OutputStream os = connection.getOutputStream();
+            OutputStreamWriter postRequest = new OutputStreamWriter(os);
             postRequest.write(jsonString);
+            postRequest.flush();
             postRequest.close();
 
-            if(connection.getResponseCode() != HttpURLConnection.HTTP_ACCEPTED){
-                Toast.makeText(this,"RESPONSE CODE DOESNT LIKE IT?",Toast.LENGTH_SHORT).show();
+            Log.e("After postRequest","Wooo");
+
+            InputStream is = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            Log.e("After input stream","Wooo");
+
+            // reads the response and makes toast of it
+            String line = null;
+            while((line = br.readLine()) != null){
+                Toast.makeText(GameActivity.this, line, Toast.LENGTH_SHORT).show();
             }
-            //connection.disconnect();
+
+            connection.disconnect();
+            Toast.makeText(GameActivity.this,"CONNECTION DISCONNECTED",Toast.LENGTH_SHORT).show();
         }
         catch(IOException e){
+            Toast.makeText(GameActivity.this,"IOException from function",Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            Log.e("error message:", e.getMessage());
+        }
+        catch(Throwable t){
+            t.printStackTrace();
+            Toast.makeText(GameActivity.this,"We got an error, throwable",Toast.LENGTH_SHORT).show();
         }
     }
 }
