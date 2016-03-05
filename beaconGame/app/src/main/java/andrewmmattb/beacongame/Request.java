@@ -57,5 +57,6 @@ public class Request {
 
 		//print result
 		System.out.println(response.toString());
+		return;
 	}
 }

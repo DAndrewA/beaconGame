@@ -72,82 +72,11 @@ public class GameActivity extends Activity {
         // sets the previous score to equal the current score
         prevScore = score;
 
-        // writes the map into a string in JSON format
-        String jsonString = new JSONObject(values).toString();
-
         try {
-            Request.sendPost(jsonString);
+            new MakeSeverPostTask(values).execute();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("problem",""+e.getMessage());
         }
-
-        /* FIRST ATTEMPT - REQUEST CLASS DESTROYS THIS
-        try {
-            URL url = new URL("http",serverPath,80,"points");
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
-
-
-
-
-            String userCredentials = "username:password";
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(jsonString.getBytes().length));
-            connection.setRequestProperty("Content-Language", "en-UK");
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-
-
-            InputStream is = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            Log.e("After input stream", "Wooo");
-
-
-
-            connection.setDoOutput(true);
-            connection.setChunkedStreamingMode(0);
-
-            Log.e("Before postrequest", connection.toString());
-            Log.e("Before again...",connection.getURL().toString());
-
-            OutputStream os = connection.getOutputStream();
-            OutputStreamWriter postRequest = new OutputStreamWriter(os);
-            postRequest.write(jsonString);
-            postRequest.flush();
-            postRequest.close();
-
-            Log.e("After postRequest","Wooo");
-
-            /*
-            InputStream is = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            Log.e("After input stream","Wooo");
-
-            // reads the response and makes toast of it
-            String line = null;
-            while((line = br.readLine()) != null){
-                Toast.makeText(GameActivity.this, line, Toast.LENGTH_SHORT).show();
-            }
-
-            connection.disconnect();
-            Toast.makeText(GameActivity.this,"CONNECTION DISCONNECTED",Toast.LENGTH_SHORT).show();
-        }
-        catch(IOException e){
-            Toast.makeText(GameActivity.this,"IOException from function",Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-            Log.e("error message:", e.getMessage());
-        }
-        catch(Throwable t){
-            t.printStackTrace();
-            Log.e("Throwable error", " " + t.getMessage());
-            Toast.makeText(GameActivity.this,"We got an error, throwable",Toast.LENGTH_SHORT).show();
-        }
-        */
     }
 }
