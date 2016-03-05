@@ -17,16 +17,28 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: "10000000"}));
 
-// Chatroom
+// Game
+
+var gameController = require("./data/game.js");
+var getGameTime = function(){
+  return 1 + Math.random()*10000;
+};
+var newGame = function () {
+  var newGameTime = getGameTime();
+  gameController.endGame(newGameTime);
+  io.emit('new game', newGameTime);
+  setTimeout(newGame, newGameTime);
+};
+newGame();
+
+var beginRoutes = require("./routes/begin.js");
+app.use("/begin", beginRoutes);
 
 var numUsers = 0;
-var latestSocket;
 
 io.on('connection', function (socket) {
   console.log("connection");
-  latestSocket = socket;
   var addedUser = false;
-
 
   app.post("/points", function (req, res) {
     console.log("points");
@@ -36,6 +48,8 @@ io.on('connection', function (socket) {
       username: req.body.username,
       points: req.body.newPoints
     });
+
+    gameController.currentGame.incrementPoints(req.body.username, req.body.newPoints);
   });
 
   // when the client emits 'new message', this listens and executes
