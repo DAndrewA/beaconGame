@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "10000000"}));
 
 var gameController = require("./data/game.js");
 var getGameTime = function(){
-  return 1 + Math.random()*10000;
+  return 10000 + Math.random()*50000;
 };
 var newGame = function () {
   var newGameTime = getGameTime();
