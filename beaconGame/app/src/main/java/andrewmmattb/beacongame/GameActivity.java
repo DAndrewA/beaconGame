@@ -37,7 +37,7 @@ public class GameActivity extends Activity {
     String username;
     String serverPath = "ec2-54-187-69-193.us-west-2.compute.amazonaws.com";
 
-    int score = 0;
+    int score = -10;
     int prevScore = 0;
 
     TextView usernameTextView;
@@ -79,4 +79,6 @@ public class GameActivity extends Activity {
             Log.e("problem",""+e.getMessage());
         }
     }
+
+    
 }
