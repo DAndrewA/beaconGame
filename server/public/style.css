@@ -1,0 +1,101 @@
+/* Fix user-agent */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, input {
+  font-family:
+    "HelveticaNeue-Light",
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Lucida Grande",
+    sans-serif;
+    text-align: center;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  word-wrap: break-word;
+}
+
+/* Pages */
+
+.pages {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+/* pages */
+.flexbox {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+.flexbox > *{
+    width: 50%;
+}
+
+/* Chat page */
+.chat {
+    height: 20%;
+}
+
+.chat .leaderboard{
+  width: 100%;
+}
+
+/* Leaderboard page */
+.leaderboard {
+    width: 100%;
+}
+
+.name .points{
+    text-align: center;
+}
+
+.name-col {
+    width: 200px;
+}
+
+/* Font */
+
+.messages {
+  font-size: 150%;
+}
+
+.log {
+  color: gray;
+  font-size: 70%;
+  margin: 5px;
+  text-align: center;
+}
+
+/* Messages */
+
+.chatArea {
+  height: 100%;
+}
+
+.messages {
+  height: 100%;
+  margin: 0;
+  overflow-y: scroll;
+}
+
+
