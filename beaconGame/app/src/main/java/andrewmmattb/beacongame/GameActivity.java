@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import org.altbeacon.beacon.Beacon;
+
+import java.util.ArrayList;
+
 public class GameActivity extends Activity {
 
     String username;
