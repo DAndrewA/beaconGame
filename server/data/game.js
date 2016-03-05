@@ -1,7 +1,6 @@
 /**
  * Created by matt on 05/03/2016.
  */
-require('array.prototype.findindex');
 var Game = function(gameTime){
   var self = this;
 
