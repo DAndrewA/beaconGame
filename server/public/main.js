@@ -13,8 +13,6 @@ $(function() {
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
-  var $chatPage = $('.chat.page'); // The chatroom page
-
   // Prompt for setting a username
   var username;
   var connected = false;
@@ -23,6 +21,25 @@ $(function() {
   var $currentInput = $usernameInput.focus();
 
   var socket = io();
+
+  var clock;
+  var Clock = function(startTime){
+    var self = this;
+    startTime = Math.ceil(startTime/1000);
+    self.flip = $(".countdown").FlipClock(startTime, {
+      clockFace: 'Counter'
+    });
+    self.start = function(){
+      setTimeout(function(){
+        setInterval(function () {
+          self.flip.decrement();
+        }, 1000)
+      });
+    };
+    self.setTime = function(time){
+      self.flip.setTime(Math.ceil(time/1000));
+    }
+  };
 
   function addParticipantsMessage (data) {
     var message = '';
@@ -213,34 +230,19 @@ $(function() {
     addParticipantsMessage(data);
   });
 
-
-  /*
-
-  var options = {
-    valueNames: ['name', 'points'],
-    item: '<li><h3 class="name"></h3><p class="points"></p></li>'
-  };
-
-  var Player = function(name, points){
-    var self = this;
-    self.name = name;
-    self.points = points;
-  };
-  var values = [
-      new Player("1name", 1),
-      new Player("2name", 2),
-      new Player("3name", 3)
-  ];
-  var playerList = new List('players', options, values);
-  playerList.add(new Player("4name", 4));
-  */
-
   function PlayerList(name){
     var self = this;
     self.players = new List(name, {valueNames:['name','points']});
+    self.names = [];
+    self.reset = function () {
+      self.names.forEach(function (name) {
+        self.players.remove('name', name);
+      });
+    };
     self.addPlayer = function(name, points){
       self.players.add([{name:name, points:points}]);
       self.sort();
+      self.names.push(name);
     };
     self.removePlayer = function(name){
       self.players.remove('name', name);
@@ -265,11 +267,16 @@ $(function() {
     };
   }
 
-  var playerList = new PlayerList('player-list');
-
-  playerList.addPlayer('1matt', 1);
-  playerList.incrementPoints('1matt', 2);
-  playerList.incrementPoints('2matt', 2);
+  var playerList;
+  $.get("/begin")
+      .done(function (data) {
+        playerList = new PlayerList('player-list');
+        clock = new Clock(data.gameTime);
+        clock.start();
+        data.players.forEach(function (el) {
+          playerList.addPlayer(el.name, el.points);
+        });
+      });
 
   socket.on('new points', function (data) {
     connected = true;
@@ -278,6 +285,13 @@ $(function() {
     log(message);
     console.log(message);
     playerList.incrementPoints(data.username, data.points);
+  });
+
+  socket.on('new game', function(gameTime){
+    console.log(gameTime);
+    console.log("new game reset player list");
+    playerList.reset();
+    clock.setTime(gameTime);
   });
 
   // Whenever the server emits 'new message', update the chat body
