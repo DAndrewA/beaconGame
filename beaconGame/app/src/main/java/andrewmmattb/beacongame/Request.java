@@ -1,3 +1,5 @@
+package andrewmmattb.beacongame;
+
 /**
  * Created by matt on 05/03/2016.
  */
@@ -55,5 +57,6 @@ public class Request {
 
 		//print result
 		System.out.println(response.toString());
+		return;
 	}
 }

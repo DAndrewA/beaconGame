@@ -1,10 +1,12 @@
 package andrewmmattb.beacongame;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.JsonWriter;
 import android.util.Log;
 import android.view.Menu;
@@ -35,7 +37,7 @@ public class GameActivity extends Activity {
     String username;
     String serverPath = "ec2-54-187-69-193.us-west-2.compute.amazonaws.com";
 
-    int score = 0;
+    int score = -10;
     int prevScore = 0;
 
     TextView usernameTextView;
@@ -70,51 +72,13 @@ public class GameActivity extends Activity {
         // sets the previous score to equal the current score
         prevScore = score;
 
-        // writes the map into a string in JSON format
-        String jsonString = new JSONObject(values).toString();
-
         try {
-            URL url = new URL("http",serverPath,80,"points");
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setChunkedStreamingMode(0);
-
-            Log.e("Before postrequest", connection.toString());
-            Log.e("Before again...",connection.getURL().toString());
-
-            OutputStream os = connection.getOutputStream();
-            OutputStreamWriter postRequest = new OutputStreamWriter(os);
-            postRequest.write(jsonString);
-            postRequest.flush();
-            postRequest.close();
-
-            Log.e("After postRequest","Wooo");
-
-            InputStream is = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            Log.e("After input stream","Wooo");
-
-            // reads the response and makes toast of it
-            String line = null;
-            while((line = br.readLine()) != null){
-                Toast.makeText(GameActivity.this, line, Toast.LENGTH_SHORT).show();
-            }
-
-            connection.disconnect();
-            Toast.makeText(GameActivity.this,"CONNECTION DISCONNECTED",Toast.LENGTH_SHORT).show();
-        }
-        catch(IOException e){
-            Toast.makeText(GameActivity.this,"IOException from function",Toast.LENGTH_LONG).show();
+            new MakeSeverPostTask(values).execute();
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.e("error message:", e.getMessage());
-        }
-        catch(Throwable t){
-            t.printStackTrace();
-            Toast.makeText(GameActivity.this,"We got an error, throwable",Toast.LENGTH_SHORT).show();
+            Log.e("problem",""+e.getMessage());
         }
     }
+
+    
 }
