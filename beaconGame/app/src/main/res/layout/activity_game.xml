@@ -15,16 +15,24 @@
         android:layout_centerHorizontal="true"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:text="NAME" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
         android:id="@+id/textViewGameScore"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:layout_below="@+id/textViewGameUsername"
+        android:layout_centerHorizontal="true" />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/webViewScoreboard"
+        android:layout_below="@+id/textViewGameScore"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
