@@ -82,6 +82,10 @@ ul {
     padding-left: 0;
 }
 
+.scoring-icon {
+    width: 1em;
+}
+
 /* Font */
 
 .messages {
